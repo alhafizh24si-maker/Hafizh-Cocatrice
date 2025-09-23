@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatakuliahController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,4 +36,8 @@ Route::resource('matakuliah', MatakuliahController::class);
 Route::get('/matakuliah/show/{kode?}', [MatakuliahController::class, 'show'])
     ->where('kode', '[A-Z0-9]+')
     ->name('matakuliah.show.custom');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/pegawai', [PegawaiController::class, 'index']);
 
