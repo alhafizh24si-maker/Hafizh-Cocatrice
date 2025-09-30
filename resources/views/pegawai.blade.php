@@ -78,7 +78,7 @@
                 @endforeach
             </ul>
         </div>
-
+ 
         <div class="data-item">
             <span class="label">Tanggal Harus Wisuda:</span>
             <span class="value">{{ $tgl_harus_wisuda }}</span>
