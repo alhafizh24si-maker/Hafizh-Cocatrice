@@ -7,7 +7,10 @@
     <title>My Laravel App</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
+
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -56,7 +59,9 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">My Laravel App</a>
+
+            <img src="{{ asset('assets/image/odette.png') }}" alt="logo">
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -83,7 +88,7 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="display-6 mb-2"> {{ $username }} </h1>
+            <h1 class="display-6 mb-2 font-custom"> {{ $username }} </h1>
             <p class="lead mb-0">{{ $last_login }}</p>
         </div>
     </section>
@@ -172,7 +177,7 @@
                                 </ul>
                             </div>
                         @endif
-                        
+
                         @if (session('info'))
                             <div class="alert alert-info">
                                 {!! session('info') !!}
