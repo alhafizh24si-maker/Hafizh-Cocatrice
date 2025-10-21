@@ -33,7 +33,7 @@
             <div class="col-12 mb-4">
                 <div class="card border-0 shadow components-section">
                     <div class="card-body">
-                        <form action="{{ route('pelanggan.update', $dataPelanggan->pelanggan_id) }}" method="POST">
+                        <form action="{{ route('user.update', $dataPelanggan->pelanggan_id) }}" method="POST">
                             @method('PUT')
                             @csrf
                             <div class="row mb-4">
