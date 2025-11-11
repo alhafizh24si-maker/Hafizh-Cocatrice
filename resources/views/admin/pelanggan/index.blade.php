@@ -1,7 +1,7 @@
 @extends('layouts.admin.app')
 
-@section('content')
-    {{--start main content--}}
+        @section('content')
+        {{-- start main content --}}
         <div class="py-4">
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
                 <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -24,15 +24,19 @@
                     <h1 class="h4">Data Pelanggan</h1>
                     <p class="mb-0">List data seluruh pelanggan</p>
                 </div>
+
                 <div>
-                    <a href="{{ route('pelanggan.create') }}" class="btn btn-success text-white"><i
+                    <a href={{ route('pelanggan.create') }} class="btn btn-success text-white"><i
                             class="far fa-question-circle me-1"></i>
                         Tambah Pelanggan</a>
-
                 </div>
             </div>
-
         </div>
+        @if (session('success'))
+            <div class="alert alert-info">
+                {!! session('success') !!}
+            </div>
+        @endif
 
         <div class="row">
             <div class="col-12 mb-4">
@@ -60,8 +64,8 @@
                                             <td>{{ $item->gender }}</td>
                                             <td>{{ $item->email }}</td>
                                             <td>{{ $item->phone }}</td>
-
-                                            <td><a href="{{ route('pelanggan.edit', $item->pelanggan_id) }}
+                                            <td>
+                                                <a href="{{ route('pelanggan.edit', $item->pelanggan_id) }}"
                                                     class="btn btn-info btn-sm">
                                                     <svg class="icon icon-xs me-2" data-slot="icon" fill="none"
                                                         stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"
@@ -72,7 +76,7 @@
                                                     </svg>
                                                     Edit
                                                 </a>
-                                                <form action="{{ route('pelanggan.destroy', $item->pelanggan_id) }}" method="POST" style="display:inline">
+                                                <form action="{{ route('pelanggan.destroy',$item->pelanggan_id) }}" method="POST" style="display:inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">
@@ -90,7 +94,6 @@
                                             </td>
                                         </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                         </div>
@@ -98,5 +101,5 @@
                 </div>
             </div>
         </div>
-    {{--end main content--}}
+        {{-- end main content --}}
 @endsection

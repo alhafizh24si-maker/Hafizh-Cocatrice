@@ -1,6 +1,7 @@
 @extends('layouts.admin.app')
 
 @section('content')
+{{-- start main content --}}
         <div class="py-4">
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
                 <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -21,7 +22,7 @@
             <div class="d-flex justify-content-between w-100 flex-wrap">
                 <div class="mb-3 mb-lg-0">
                     <h1 class="h4">Edit Pelanggan</h1>
-                    <p class="mb-0">Form untuk menambahkan data pelanggan baru.</p>
+                    <p class="mb-0">Form untuk mengedit data pelanggan.</p>
                 </div>
                 <div>
                     <a href="" class="btn btn-primary"><i class="far fa-question-circle me-1"></i> Kembali</a>
@@ -33,7 +34,7 @@
             <div class="col-12 mb-4">
                 <div class="card border-0 shadow components-section">
                     <div class="card-body">
-                        <form action="{{ route('user.update', $dataPelanggan->pelanggan_id) }}" method="POST">
+                        <form action="{{ route('pelanggan.update', $dataPelanggan->pelanggan_id) }}" method="POST">
                             @method('PUT')
                             @csrf
                             <div class="row mb-4">
@@ -107,5 +108,5 @@
                 </div>
             </div>
         </div>
+{{-- end main content --}}
 @endsection
-
