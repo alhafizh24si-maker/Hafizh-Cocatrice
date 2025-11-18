@@ -16,4 +16,13 @@ class Pelanggan extends Model
         'email',
         'phone',
     ];
+    public function scopeFilter(Builder $query, $request, array $filterableColumns): Builder
+{
+    foreach ($filterableColumns as $column) {
+        if ($request->filled($column)) {
+            $query->where($column, $request->input($column));
+        }
+    }
+    return $query;
+}
 }
