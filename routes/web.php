@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardContoller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\MahasiswaController;
@@ -52,3 +53,5 @@ Route::get('dashboard', [DashboardContoller::class, 'index'])->name('dashboard')
 Route::resource('pelanggan', PelangganController::class);
 
 Route::resource('user', UserController::class);
+
+Route::resource('profile', ProfileController::class);

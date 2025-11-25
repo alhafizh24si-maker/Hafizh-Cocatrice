@@ -1,20 +1,16 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-         $data['dataUser'] = User::all();
+        $data['dataUser'] = User::paginate(10); // Pagination dengan 10 item per halaman
         return view('admin.user.index', $data);
     }
 
@@ -23,7 +19,7 @@ class UserController extends Controller
      */
     public function create()
     {
-       return view('admin.user.create');
+        return view('admin.user.create');
     }
 
     /**
@@ -31,15 +27,28 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-        $data['name'] = $request->name;
-        $data['email']  = $request->email;
-        $data['password']   = Hash::make($request->password);
+        $request->validate([
+            'name' => 'required|max:100',
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => 'required|max:300|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ];
+
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $data['profile_picture'] = $path;
+        }
 
         User::create($data);
 
-        return redirect()->route('user.index')->with('success', 'Penambahan Data Berhasil!');
+        return redirect()->route('user.index')->with('success', 'Penambahan Data User Berhasil!');
     }
 
     /**
@@ -55,7 +64,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-          $data['dataUser'] = User::findOrFail($id);
+        $data['dataUser'] = User::findOrFail($id);
         return view('admin.user.edit', $data);
     }
 
@@ -64,16 +73,48 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $id = $id;
-        $user    = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
+        $request->validate([
+            'name' => 'required|max:100',
+            'email' => ['required', 'email', 'unique:users,email,' . $id],
+            'password' => 'nullable|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'remove_profile_picture' => 'nullable|boolean',
+        ]);
 
-        $user->save();
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
 
-        return redirect()->route('user.index')->with('success', 'Perubahan Data Berhasil!');
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Handle remove profile picture
+        if ($request->remove_profile_picture) {
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+            $data['profile_picture'] = null;
+        }
+
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            // Delete old picture if exists
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $data['profile_picture'] = $path;
+        }
+
+        $user->update($data);
+
+        return redirect()->route('user.index')->with('success', 'Perubahan Data User Berhasil!');
     }
 
     /**
@@ -83,8 +124,13 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        // Delete profile picture if exists
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
         $user->delete();
 
-        return redirect()->route('user.index')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('user.index')->with('success', 'Data User berhasil dihapus');
     }
 }
