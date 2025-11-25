@@ -57,4 +57,16 @@ class User extends Authenticatable
         }
         return asset('assets/images/default-avatar.png');
     }
+     public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    // Method untuk cek apakah photo exists
+    public function getHasProfilePhotoAttribute()
+    {
+        if (!$this->profile_photo) return false;
+
+        return Storage::disk('public')->exists('profile-photos/' . $this->profile_photo);
+    }
 }

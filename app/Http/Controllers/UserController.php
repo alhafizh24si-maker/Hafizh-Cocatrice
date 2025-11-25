@@ -28,21 +28,21 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:100',
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => 'required|max:300|min:8|confirmed',
+            'name'            => 'required|max:100',
+            'email'           => ['required', 'email', 'unique:users'],
+            'password'        => 'required|max:300|min:8|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = [
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ];
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $path                    = $request->file('profile_picture')->store('profile_pictures', 'public');
             $data['profile_picture'] = $path;
         }
 
@@ -76,15 +76,15 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|max:100',
-            'email' => ['required', 'email', 'unique:users,email,' . $id],
-            'password' => 'nullable|min:8|confirmed',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'name'                   => 'required|max:100',
+            'email'                  => ['required', 'email', 'unique:users,email,' . $id],
+            'password'               => 'nullable|min:8|confirmed',
+            'profile_picture'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'remove_profile_picture' => 'nullable|boolean',
         ]);
 
         $data = [
-            'name' => $request->name,
+            'name'  => $request->name,
             'email' => $request->email,
         ];
 
@@ -108,7 +108,7 @@ class UserController extends Controller
                 Storage::disk('public')->delete($user->profile_picture);
             }
 
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $path                    = $request->file('profile_picture')->store('profile_pictures', 'public');
             $data['profile_picture'] = $path;
         }
 
@@ -132,5 +132,10 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('user.index')->with('success', 'Data User berhasil dihapus');
+    }
+    public function documents($id)
+    {
+        $user = User::with('documents')->findOrFail($id);
+        return view('admin.user.documents', compact('user'));
     }
 }

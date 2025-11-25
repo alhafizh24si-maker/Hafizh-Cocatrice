@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardContoller;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PelangganController;
@@ -55,3 +56,22 @@ Route::resource('pelanggan', PelangganController::class);
 Route::resource('user', UserController::class);
 
 Route::resource('profile', ProfileController::class);
+
+Route::resource('document', DocumentController::class);
+
+// User Routes
+Route::resource('user', UserController::class);
+Route::delete('user/{id}/delete-photo', [UserController::class, 'deletePhoto'])->name('user.delete-photo');
+
+// Document Routes
+Route::prefix('user/{user}')->group(function () {
+    Route::get('/documents', [UserController::class, 'documents'])->name('user.documents');
+    Route::post('/documents', [DocumentController::class, 'store'])->name('user.documents.store');
+});
+
+// Document actions
+Route::prefix('documents')->group(function () {
+    Route::get('/{id}/download', [DocumentController::class, 'download'])->name('documents.download');
+    Route::get('/{id}/view', [DocumentController::class, 'view'])->name('documents.view');
+    Route::delete('/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+});
