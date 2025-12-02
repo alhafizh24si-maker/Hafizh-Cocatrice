@@ -37,6 +37,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
+    
 {{--start css--}}
    @include('layouts.admin.css')
 {{--end css--}}

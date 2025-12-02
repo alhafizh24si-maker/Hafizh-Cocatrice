@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProfileController;
@@ -75,3 +76,6 @@ Route::prefix('documents')->group(function () {
     Route::get('/{id}/view', [DocumentController::class, 'view'])->name('documents.view');
     Route::delete('/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
 });
+
+Route::get('/auth', [AuthController::class, 'index'])->name('auth.index');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
