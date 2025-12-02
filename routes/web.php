@@ -1,16 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardContoller;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\MatakuliahController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,14 +43,18 @@ Route::get('/matakuliah/show/{kode?}', [MatakuliahController::class, 'show'])
     ->where('kode', '[A-Z0-9]+')
     ->name('matakuliah.show.custom');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home')
+    ->middleware('checkislogin');
 
 Route::get('/pegawai', [PegawaiController::class, 'index']);
 
 Route::post('question/store', [QuestionController::class, 'store'])
     ->name('question.store');
 
-Route::get('dashboard', [DashboardContoller::class, 'index'])->name('dashboard');
+Route::get('dashboard', [DashboardContoller::class, 'index'])
+    ->name('dashboard')
+    ->middleware('checkislogin');
 
 Route::resource('pelanggan', PelangganController::class);
 
@@ -79,3 +83,8 @@ Route::prefix('documents')->group(function () {
 
 Route::get('/auth', [AuthController::class, 'index'])->name('auth.index');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+Route::group(['middleware' => ['checkrole:']], function(){
+    Route::get('user', [UserController::class, 'index'])->name('user.index');
+});

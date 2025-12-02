@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardContoller extends Controller
 {
@@ -11,7 +12,12 @@ class DashboardContoller extends Controller
      */
     public function index()
     {
+        if(!Auth::check()){
+            return redirect()->route('auth.index');
+        }
+
         return view('admin.dashboard');
+
     }
 
     /**
